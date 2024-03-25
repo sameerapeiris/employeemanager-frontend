@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Employee } from './types/types';
 import { EmployeeService } from './services/employee.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -8,19 +8,22 @@ import { HttpErrorResponse } from '@angular/common/http';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
-  public employe: Employee[] | undefined;
+export class AppComponent implements OnInit {
+  public employees: Employee[] | undefined;
 
   constructor(private employeeService: EmployeeService) {}
-
+  ngOnInit() {
+    this.getEmployees();
+  }
   public getEmployees(): void {
-    this.employeeService.getEmployee().subscribe(
-      (response: Employee[]) => {
-        this.employe = response;
+    this.employeeService.getEmployee().subscribe({
+      next: (response: Employee[]) => {
+        this.employees = response;
+        console.log(response);
       },
-      (error: HttpErrorResponse) => {
-        alert(error.message);
-      }
-    );
+      error: (e) => {
+        alert(e.message);
+      },
+    });
   }
 }

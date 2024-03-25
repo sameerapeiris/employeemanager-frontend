@@ -5,27 +5,34 @@ import { HttpClient } from '@angular/common/http';
 import { envvironment } from '../env/env';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class EmployeeService {
+  private apiBaseUrl = envvironment.apiBaseUrl;
 
-  private apiBaseUrl = envvironment.apiBaseUrl
+  constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) { }
-
-  public getEmployee():Observable<Employee[]> {
-    return this.http.get<Employee[]>(`${this.apiBaseUrl}/employee/all`)
+  public getEmployee(): Observable<Employee[]> {
+    return this.http.get<Employee[]>(`${this.apiBaseUrl}/employee/all`);
   }
 
   public addEmployee(employee: Employee): Observable<Employee> {
-    return this.http.post<Employee>(`${this.apiBaseUrl}/employee/add`, employee)
+    return this.http.post<Employee>(
+      `${this.apiBaseUrl}/employee/add`,
+      employee
+    );
   }
 
-  public updateEmployee(employee: Employee): Observable <Employee>{
-    return this.http.put<Employee>(`${this.apiBaseUrl}/employee/update`, employee)
+  public updateEmployee(employee: Employee): Observable<Employee> {
+    return this.http.put<Employee>(
+      `${this.apiBaseUrl}/employee/update`,
+      employee
+    );
   }
 
-  public deleteEmployee(id: number): Observable<Employee>{
-    return this.http.delete<Employee>(`${this.apiBaseUrl}/employee/delete/${id}`)
+  public deleteEmployee(id: number): Observable<Employee> {
+    return this.http.delete<Employee>(
+      `${this.apiBaseUrl}/employee/delete/${id}`
+    );
   }
 }
