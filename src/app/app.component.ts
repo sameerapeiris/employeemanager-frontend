@@ -9,7 +9,7 @@ import { HttpErrorResponse } from '@angular/common/http';
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
-  public employees: Employee[] | undefined;
+  public employees: Employee[] = [];
 
   constructor(private employeeService: EmployeeService) {}
   ngOnInit() {
@@ -26,4 +26,23 @@ export class AppComponent implements OnInit {
       },
     });
   }
+
+  public onOpenModal(employee: Employee | null, mode: string):void{
+      const button = document.createElement("button");
+      button.style.display = "none";
+      button.type = "button";
+      button.setAttribute('data-toggle', 'modal');
+      document.getElementById("main")?.appendChild(button);
+      if(mode === "add"){
+        button.setAttribute('data-target', '#addEmployee')
+      }
+      if(mode ==="edit"){
+        button.setAttribute('data-target', '#editEmployee')
+      }
+      if(mode ==="delete"){
+        button.setAttribute('data-target', '#deleteEmployee')
+      }
+      button.click();
+  }
+
 }
