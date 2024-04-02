@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Employee } from './types/types';
 import { EmployeeService } from './services/employee.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +17,7 @@ export class AppComponent implements OnInit {
     this.getEmployees();
   }
   public getEmployees(): void {
+
     this.employeeService.getEmployee().subscribe({
       next: (response: Employee[]) => {
         this.employees = response;
@@ -27,22 +29,35 @@ export class AppComponent implements OnInit {
     });
   }
 
-  public onOpenModal(employee: Employee | null, mode: string):void{
-      const button = document.createElement("button");
-      button.style.display = "none";
-      button.type = "button";
-      button.setAttribute('data-toggle', 'modal');
-      document.getElementById("main")?.appendChild(button);
-      if(mode === "add"){
-        button.setAttribute('data-target', '#addEmployee')
-      }
-      if(mode ==="edit"){
-        button.setAttribute('data-target', '#editEmployee')
-      }
-      if(mode ==="delete"){
-        button.setAttribute('data-target', '#deleteEmployee')
-      }
-      button.click();
+  public onAddEmployee(addForm: NgForm): void {
+    debugger
+    document.getElementById("addButtonClose")?.click();
+    this.employeeService.addEmployee(addForm.value).subscribe({
+      next: (response: Employee) => {
+        console.log(response);
+        this.getEmployees();
+      },
+      error: (e) => {
+        alert(e.message);
+      },
+    });
   }
 
+  public onOpenModal(employee: Employee | null, mode: string): void {
+    const button = document.createElement('button');
+    button.style.display = 'none';
+    button.type = 'button';
+    button.setAttribute('data-toggle', 'modal');
+    document.getElementById('main')?.appendChild(button);
+    if (mode === 'add') {
+      button.setAttribute('data-target', '#addEmployee');
+    }
+    if (mode === 'edit') {
+      button.setAttribute('data-target', '#editEmployee');
+    }
+    if (mode === 'delete') {
+      button.setAttribute('data-target', '#deleteEmployee');
+    }
+    button.click();
+  }
 }
