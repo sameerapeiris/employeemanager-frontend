@@ -10,18 +10,25 @@ import { NgForm } from '@angular/forms';
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
-  public employees: Employee[] = [];
+  public employees?: Employee[];
+  public editEmloyee?: Employee;
+  public empl:any[] = []
 
   constructor(private employeeService: EmployeeService) {}
   ngOnInit() {
     this.getEmployees();
   }
   public getEmployees(): void {
-
     this.employeeService.getEmployee().subscribe({
       next: (response: Employee[]) => {
         this.employees = response;
         console.log(response);
+        this.empl = response.map(employee =>{
+          const namePart = employee.name.split(" ");
+          const firstName = namePart[0];
+          return {...employee, firstName}
+
+        })
       },
       error: (e) => {
         alert(e.message);
@@ -30,9 +37,23 @@ export class AppComponent implements OnInit {
   }
 
   public onAddEmployee(addForm: NgForm): void {
-    debugger
-    document.getElementById("addButtonClose")?.click();
+    document.getElementById('addButtonClose')?.click();
     this.employeeService.addEmployee(addForm.value).subscribe({
+      next: (response: Employee) => {
+        console.log(response);
+        this.getEmployees();
+        addForm.reset();
+      },
+      error: (e) => {
+        alert(e.message);
+        addForm.reset();
+      },
+    });
+  }
+
+  public onUpdateEmployee(employee: Employee): void {
+
+    this.employeeService.updateEmployee(employee).subscribe({
       next: (response: Employee) => {
         console.log(response);
         this.getEmployees();
@@ -43,7 +64,8 @@ export class AppComponent implements OnInit {
     });
   }
 
-  public onOpenModal(employee: Employee | null, mode: string): void {
+  public onOpenModal(employee?: Employee, mode?: string): void {
+    const container = document.getElementById('main');
     const button = document.createElement('button');
     button.style.display = 'none';
     button.type = 'button';
@@ -53,11 +75,13 @@ export class AppComponent implements OnInit {
       button.setAttribute('data-target', '#addEmployee');
     }
     if (mode === 'edit') {
+      this.editEmloyee = employee;
       button.setAttribute('data-target', '#editEmployee');
     }
     if (mode === 'delete') {
       button.setAttribute('data-target', '#deleteEmployee');
     }
+    container?.appendChild(button);
     button.click();
   }
 }
