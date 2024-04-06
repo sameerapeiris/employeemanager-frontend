@@ -13,6 +13,7 @@ export class AppComponent implements OnInit {
   public employees?: Employee[];
   public editEmloyee?: Employee;
   public empl:any[] = []
+  public deleteEmployee?: Employee;
 
   constructor(private employeeService: EmployeeService) {}
   ngOnInit() {
@@ -64,6 +65,19 @@ export class AppComponent implements OnInit {
     });
   }
 
+  public onDeleteEmployee(employeeID?: number): void {
+
+    this.employeeService.deleteEmployee(employeeID).subscribe({
+      next: (response: Employee) => {
+        console.log(response);
+        this.getEmployees();
+      },
+      error: (e) => {
+        alert(e.message);
+      },
+    });
+  }
+
   public onOpenModal(employee?: Employee, mode?: string): void {
     const container = document.getElementById('main');
     const button = document.createElement('button');
@@ -79,6 +93,7 @@ export class AppComponent implements OnInit {
       button.setAttribute('data-target', '#editEmployee');
     }
     if (mode === 'delete') {
+      this.deleteEmployee = employee;
       button.setAttribute('data-target', '#deleteEmployee');
     }
     container?.appendChild(button);

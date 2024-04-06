@@ -30,7 +30,7 @@ export class EmployeeService {
     );
   }
 
-  public deleteEmployee(id: number): Observable<Employee> {
+  public deleteEmployee(id?: number): Observable<Employee> {
     return this.http.delete<Employee>(
       `${this.apiBaseUrl}/employee/delete/${id}`
     );
